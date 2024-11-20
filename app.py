@@ -6,12 +6,29 @@ and handles the configuration of extensions such as database connections and aut
 The primary purpose of this file is to serve as the entry point for the backend service.
 
 """
+import os
+import redis
+import psycopg2
 from flask import Flask
 from dotenv import load_dotenv
 
 load_dotenv()  # Load environment variables from .env file
 
 app = Flask(__name__)
+
+redis_client = redis.StrictRedis(
+    host=os.getenv('REDIS_HOST', 'localhost'),
+    port=os.getenv('REDIS_PORT', 6379),  # type: ignore
+    decode_responses=True
+)
+
+conn = psycopg2.connect(
+    dbname=os.getenv("POSTGRES_DB", "mydatabase"),
+    user=os.getenv("POSTGRES_USER", "myuser"),
+    password=os.getenv("POSTGRES_PASSWORD", "mypassword"),
+    host=os.getenv("POSTGRES_HOST", "localhost"),
+    port=os.getenv("POSTGRES_PORT", 5432),
+)
 
 
 @app.get("/")
@@ -26,7 +43,13 @@ def index():
     Returns:
         str: A welcome message.
     """
-    return "It's fine... Everything is fine..."
+    redis_client.set("message", 'Hello from Redis!')
+    message = redis_client.get("message")
+
+    cur = conn.cursor()
+    cur.execute("SELECT NOW()")
+    db_time = cur.fetchone()
+    return f"{message}, PostgreSQL Time: {db_time}"
 
 
 if __name__ == '__main__':

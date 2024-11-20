@@ -1,0 +1,15 @@
+Flask                   # Core web framework
+SQLAlchemy               # ORM for database interactions
+Flask-SQLAlchemy         # SQLAlchemy integration with Flask
+Flask-Smorest            # Blueprint-based API creation and OpenAPI documentation
+Marshmallow              # Data serialization/deserialization and validation
+psycopg2-binary          # PostgreSQL database adapter for Python
+Flask-JWT-Extended       # JWT-based authentication
+redis                    # Redis client for Python
+Flask-Caching            # Flask extension for caching (with Redis support)
+python-dotenv            # Environment variable management
+requests                 # HTTP library, useful for API calls (e.g., currency conversion)
+alembic                  # Database migrations
+pytest                   # Testing framework
+pytest-flask             # Pytest support for Flask applications
+Flask-OAuthlib           # OAuth support for third-party authentication

@@ -7,14 +7,24 @@ The primary purpose of this file is to serve as the entry point for the backend 
 
 """
 import os
+from flask_caching import Cache
+from flask_sqlalchemy import SQLAlchemy
 import redis
 import psycopg2
 from flask import Flask
 from dotenv import load_dotenv
 
+from config import config_by_name  # type: ignore
+
 load_dotenv()  # Load environment variables from .env file
 
+db = SQLAlchemy()
+cache = Cache()
 app = Flask(__name__)
+
+app.config.from_object(config_by_name['development'])  # type: ignore
+db.init_app(app)
+cache.init_app(app)  # type: ignore
 
 redis_client = redis.StrictRedis(
     host=os.getenv('REDIS_HOST', 'localhost'),
